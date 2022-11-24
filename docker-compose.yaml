@@ -73,5 +73,4 @@ volumes:
   certs:
   vhostd:
   html:
-  /mnt/mail:
 
