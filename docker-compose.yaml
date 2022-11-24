@@ -41,6 +41,31 @@ services:
       - LETSENCRYPT_EMAIL=admin@underpenguin.com
       - VIRTUAL_PORT=3000
 
+  mailserver:
+    image: analogic/poste.io
+    container_name: mailserver-underpenguin
+    restart: always
+    network_mode: "host"
+    expose:
+      - "25"
+      - "8080"
+      - "4443"
+      - "110"
+      - "143"
+      - "465"
+      - "587"
+      - "993"
+      - "995"
+    environment:
+      - TZ=America/Mexico_City
+      - h=mail.underpenguin.com # Direccion del servidor de mail hosting
+      - LETSENCRYPT_EMAIL=underpenguin424@gmail.com
+      - LETSENCRYPT_HOST=mail.underpenguin.com
+      - VIRTUAL_HOST=mail.underpenguin.com
+      - HTTPS=OFF
+    volumes:
+      - /mnt/mail:/data
+
 
 
 
@@ -48,4 +73,5 @@ volumes:
   certs:
   vhostd:
   html:
+  /mnt/mail:
 
