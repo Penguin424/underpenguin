@@ -38,7 +38,7 @@ services:
     environment:
       - VIRTUAL_HOST=underpenguin.com
       - LETSENCRYPT_HOST=underpenguin.com
-      - LETSENCRYPT_ EMAIL=admin@underpenguin.com
+      - LETSENCRYPT_EMAIL=admin@underpenguin.com
       - VIRTUAL_PORT=3000
 
 
