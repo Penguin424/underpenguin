@@ -1,23 +1,24 @@
-FROM node:18.12.1-alpine3.15
-
-# Path: DockerFile
+FROM node:18.12.1-alpine3.15 AS builder
+ENV NODE_ENV production
+# Add a work directory
 WORKDIR /app
-
-# Path: DockerFile
+# Cache and Install dependencies
 COPY package.json .
-ENV PATH /app/node_modules/.bin:$PATH
-
 COPY yarn.lock .
-COPY package.json .
-
-RUN yarn
-RUN yarn global add pm2
-
+RUN yarn install --production
+# Copy app files
 COPY . .
-
-#Expose port and start application
-EXPOSE  3000
-
-# Run: start app
+# Build the app
 RUN yarn build
-CMD ["pm2", "serve", "build/", "3000", "--name", "underpenguin", "--spa"]
+
+# Bundle static assets with nginx
+FROM nginx:1.21.0-alpine as production
+ENV NODE_ENV production
+# Copy built assets from builder
+COPY --from=builder /app/build /usr/share/nginx/html
+# Add your nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Expose port
+EXPOSE 80
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

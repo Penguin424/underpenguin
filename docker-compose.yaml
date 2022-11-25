@@ -21,7 +21,8 @@ services:
     container_name: 'letsencrypt'
     restart: always
     environment:
-      - NGINX_PROXY_CONTAINER=proxy      
+      - NGINX_PROXY_CONTAINER=proxy   
+      - DEFAULT_EMAIL=underpenguin424@gmail.com
     volumes:
       - certs:/etc/nginx/certs
       - vhostd:/etc/nginx/vhost.d
@@ -29,6 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   underpenguin:
+    container_name: underpenguin
     build: 
       context: .
       dockerfile: Dockerfile          
@@ -37,9 +39,8 @@ services:
       - /app/node_modules
     environment:
       - VIRTUAL_HOST=underpenguin.com
-      - LETSENCRYPT_HOST=underpenguin.com
-      - LETSENCRYPT_EMAIL=admin@underpenguin.com
-      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=underpenguin.com      
+      
 
   # mailserver:
   #   image: analogic/poste.io
@@ -66,6 +67,10 @@ services:
   #   volumes:
   #     - /mnt/mail:/data
 
+networks:
+  default:
+    external:
+      name: nginx-proxy
 
 
 
