@@ -11,10 +11,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /data/nginx/conf.d:/etc/nginx/conf.d
-      - /data/nginx/vhost.d:/etc/nginx/vhost.d
-      - /data/nginx/html:/usr/share/nginx/html
-      - /data/nginx/certs:/etc/nginx/certs:ro
+      - certs:/etc/nginx/certs:ro
+      - vhostd:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   letsencrypt:
@@ -26,10 +25,9 @@ services:
       - NGINX_PROXY_CONTAINER=proxy
       - DEFAULT_EMAIL=underpenguin424@gmail.com
     volumes:
-      - /data/nginx/conf.d:/etc/nginx/conf.d
-      - /data/nginx/vhost.d:/etc/nginx/vhost.d
-      - /data/nginx/html:/usr/share/nginx/html
-      - /data/nginx/certs:/etc/nginx/certs:rw
+      - certs:/etc/nginx/certs
+      - vhostd:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   underpenguin:
@@ -43,34 +41,13 @@ services:
     environment:
       - VIRTUAL_HOST=underpenguin.com
       - LETSENCRYPT_HOST=underpenguin.com      
-      
 
-  # mailserver:
-  #   image: analogic/poste.io
-  #   container_name: mailserver-underpenguin
-  #   restart: always
-  #   network_mode: "host"
-  #   expose:
-  #     - "25"
-  #     - "8080"
-  #     - "4443"
-  #     - "110"
-  #     - "143"
-  #     - "465"
-  #     - "587"
-  #     - "993"
-  #     - "995"
-  #   environment:
-  #     - TZ=America/Mexico_City
-  #     - h=mail.underpenguin.com # Direccion del servidor de mail hosting
-  #     - LETSENCRYPT_EMAIL=underpenguin424@gmail.com
-  #     - LETSENCRYPT_HOST=mail.underpenguin.com
-  #     - VIRTUAL_HOST=mail.underpenguin.com
-  #     - HTTPS=OFF
-  #   volumes:
-  #     - /mnt/mail:/data
+  volumes:
+    certs:
+    html:
+    vhostd:
 
-networks:
-  default:
-    external:
-      name: nginx-proxy
+  networks:
+    default:
+      external:
+        name: nginx-proxy
