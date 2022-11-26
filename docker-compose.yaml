@@ -42,12 +42,12 @@ services:
       - VIRTUAL_HOST=underpenguin.com
       - LETSENCRYPT_HOST=underpenguin.com      
 
-  volumes:
-    certs:
-    html:
-    vhostd:
+volumes:
+  certs:  
+  html:
+  vhostd:
 
-  networks:
-    default:
-      external:
-        name: nginx-proxy
+networks:
+  default:
+    external:
+      name: nginx-proxy
